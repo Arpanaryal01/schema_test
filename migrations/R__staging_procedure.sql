@@ -92,7 +92,7 @@ create or replace procedure SP_DATA_CLEANING()
                         SELECT 
                             DATAMART_DATAPOINT.CCP_EXPRESSION 
                         FROM 
-                            "DEV_DATAMART_DB"."DEV_DICTIONARY"."DICTIONARY_DATAPOINT" AS DATAMART_DATAPOINT
+                            "DEV_DATAMART_DB"."SCHEMA_CHNAGE_DATAMART"."DICTIONARY_DATAPOINT" AS DATAMART_DATAPOINT
                         )'; 
                   
              replace_double_quotation :='
@@ -291,7 +291,7 @@ or replace procedure SP_VALIDATE_STAGING_DB(date_partition varchar,date_time_par
           
            ------get_study_type_id----
 
-            select look_up_view_study_type.id as study_type_id into : study_type_id from DEV_DATAMART_DB.DEV_DICTIONARY.VW_STUDY_TYPE as look_up_view_study_type 
+            select look_up_view_study_type.id as study_type_id into : study_type_id from DEV_DATAMART_DB.SCHEMA_CHNAGE_DATAMART.VW_STUDY_TYPE as look_up_view_study_type 
                 join "DEV_DATAMART_DB"."SCHEMA_CHANGE_TEST"."STUDY_STG" as stage_study on stage_study.study_type = look_up_view_study_type.study_type;
                     
            -------fusion_study_validation-----
@@ -342,7 +342,7 @@ or replace procedure SP_VALIDATE_STAGING_DB(date_partition varchar,date_time_par
                   
             select equal_null(PARENT_STUDY_ID, null) into : parent_is_empty from "DEV_DATAMART_DB"."SCHEMA_CHANGE_TEST".STUDY_STG;
                 if (parent_is_empty = False) then 
-                    select count(*) into : parent_exists from (select ID from DEV_DATAMART_DB.DEV_DICTIONARY.STUDY where 
+                    select count(*) into : parent_exists from (select ID from DEV_DATAMART_DB.SCHEMA_CHNAGE_DATAMART.STUDY where 
                     ID in (select PARENT_STUDY_ID from "DEV_DATAMART_DB"."SCHEMA_CHANGE_TEST".STUDY_STG));
                     if (parent_exists = 0) then 
                         return object_construct('status_code', '1', 'message', 'Validation failed for fusion_parent_exist.');
